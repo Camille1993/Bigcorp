@@ -1,27 +1,37 @@
 package com.training.bigcorp.bigcorp.model;
 
+import javax.persistence.*;
+
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
 public class Captor {
-
-
     /**
      * Captor id
      */
+    @Id
     private String id = UUID.randomUUID().toString();
 
     /**
      * Captor name
      */
+    @Column(nullable = false)
     private String name;
 
     /**
      * Captor powerSource
      */
+
+
+    @Enumerated(EnumType.STRING)
     private PowerSource powerSource;
 
-    private  Site site;
+    @Column
+    private Integer defaultPowerInWatt;
+
+    @ManyToOne
+    private Site site;
 
     @Deprecated
     public Captor() {
@@ -30,20 +40,23 @@ public class Captor {
 
     /**
      * Constructor to use with required property
+     *
      * @param name
      */
     public Captor(String name, PowerSource powerSource, Site site) {
-        this.site=site;
+        this.site = site;
         this.name = name;
-        this.powerSource =powerSource;
+        this.powerSource = powerSource;
     }
-    public Captor(String name, PowerSource powerSource){
-        this.powerSource=powerSource;
-        this.name =name;
+
+    public Captor(String name, PowerSource powerSource) {
+        this.powerSource = powerSource;
+        this.name = name;
     }
-    public Captor(String name, Site site){
-        this.site=site;
-        this.name =name;
+
+    public Captor(String name, Site site) {
+        this.site = site;
+        this.name = name;
     }
 
     public String getId() {
@@ -62,21 +75,33 @@ public class Captor {
         this.name = name;
     }
 
-    public PowerSource getPowerSource(){
+    public PowerSource getPowerSource() {
         return powerSource;
     }
 
-    public void setPowerSource(){
+    public void setPowerSource() {
         this.powerSource = powerSource;
     }
-
-    public Site getSite() {
-        return site;
-    }
-
     public void setPowerSource(PowerSource powerSource) {
         this.powerSource = powerSource;
     }
+    public Site getSite() {
+        return site;
+    }
+    public void setSite(Site site) {
+        this.site = site;
+    }
+
+
+    public Integer getDefaultPowerInWatt() {
+        return defaultPowerInWatt;
+    }
+
+    public void setDefaultPowerInWatt(Integer defaultPowerInWatt) {
+        this.defaultPowerInWatt = defaultPowerInWatt;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -97,7 +122,7 @@ public class Captor {
         return "Captor{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", site='"+ site +'\''+
+                ", site='" + site + '\'' +
                 '}';
     }
 }

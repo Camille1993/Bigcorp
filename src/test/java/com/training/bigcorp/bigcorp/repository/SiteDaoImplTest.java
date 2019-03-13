@@ -1,33 +1,32 @@
 package com.training.bigcorp.bigcorp.repository;
 
-import com.training.bigcorp.bigcorp.model.Captor;
+
 import com.training.bigcorp.bigcorp.model.Site;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
-import org.junit.Before;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
-
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
 @JdbcTest
-@ContextConfiguration(classes = DaoTestConfig.class)
+@ComponentScan
 public class SiteDaoImplTest {
 
     @Autowired
     private SiteDao siteDao;
 
-
     @Test
     public void create() {
         Assertions.assertThat(siteDao.findAll()).hasSize(1);
-        siteDao.create(new Site("New site"));
+        siteDao.persist(new Site("New site"));
         Assertions.assertThat(siteDao.findAll())
                 .hasSize(2)
                 .extracting(Site::getName)
@@ -44,12 +43,13 @@ public class SiteDaoImplTest {
 
     }
 
+
     @Test
     public void update() {
         Site site = siteDao.findById("site1");
         Assertions.assertThat(site.getName()).isEqualTo("Bigcorp Lyon");
         site.setName("site updated");
-        siteDao.update(site);
+        siteDao.persist(site);
         site = siteDao.findById("site1");
         Assertions.assertThat(site.getName()).isEqualTo("site updated");
     }
@@ -67,18 +67,26 @@ public class SiteDaoImplTest {
     }
 
     @Test
-    public void deleteById() {
+    public void delete() {
         Site newsite = new Site("New site");
-        siteDao.create(newsite);
+        siteDao.persist(newsite);
         Assertions.assertThat(siteDao.findById(newsite.getId())).isNotNull();
-        siteDao.deleteById(newsite.getId());
+        siteDao.delete(newsite);
         Assertions.assertThat(siteDao.findById(newsite.getId())).isNull();
     }
 
+    @Autowired
+    private EntityManager entityManager;
     @Test
     public void deleteByIdShouldThrowExceptionWhenIdIsUsedAsForeignKey() {
-        Assertions.assertThatThrownBy(() -> siteDao.deleteById("site1"))
-                .isExactlyInstanceOf(DataIntegrityViolationException.class);
+        Site site = siteDao.findById("c1");
+        Assertions
+                .assertThatThrownBy(() -> {
+                    siteDao.delete(site);
+                    entityManager.flush();
+                })
+                .isExactlyInstanceOf(PersistenceException.class)
+                .hasCauseExactlyInstanceOf(ConstraintViolationException.class);
     }
 }
 
