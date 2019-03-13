@@ -1,4 +1,5 @@
 INSERT INTO SITE (ID, NAME) VALUES('site1', 'Bigcorp Lyon');
+
 INSERT INTO CAPTOR (ID, NAME, site_id) VALUES('c1', 'Eolienne', 'site1');
 INSERT INTO CAPTOR (ID, NAME, site_id) VALUES('c2', 'Laminoire à chaud', 'site1');
 
