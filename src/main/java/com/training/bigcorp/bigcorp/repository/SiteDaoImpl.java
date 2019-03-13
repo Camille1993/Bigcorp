@@ -1,8 +1,6 @@
 package com.training.bigcorp.bigcorp.repository;
 
 
-
-import com.training.bigcorp.bigcorp.model.Captor;
 import com.training.bigcorp.bigcorp.model.Site;
 
 import org.springframework.dao.EmptyResultDataAccessException;
