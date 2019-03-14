@@ -1,6 +1,10 @@
 package com.training.bigcorp.bigcorp.model;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -13,16 +17,18 @@ public class Measure {
     /**
      *  When the measure date had been read
      */
-    @Column(nullable = false)
+    @NotNull
+    @Past
    private Instant instant;
     /**
      * measures values in Watt
      */
-    @Column(nullable = false)
+    @NotNull
     private Integer valueInWatt;
     /**
      * Captor where the measure had been made
      */
+    @Valid
     @ManyToOne(optional = false)
     private Captor captor;
 

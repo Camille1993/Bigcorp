@@ -35,10 +35,11 @@ public class CaptorDaoImplTest {
     private EntityManager entityManager;
 
     @Before
-    public void init(){
+    public void init() {
         site = new Site("name");
         site.setId("site1");
     }
+
     @Test
     public void findById() {
         Optional<Captor> captor = captorDao.findById("c1");
@@ -47,11 +48,13 @@ public class CaptorDaoImplTest {
                 .extracting("name")
                 .containsExactly("Eolienne");
     }
+
     @Test
     public void findByIdShouldReturnNullWhenIdUnknown() {
         Optional<Captor> captor = captorDao.findById("unknown");
         Assertions.assertThat(captor).isEmpty();
     }
+
     @Test
     public void findAll() {
         List<Captor> captors = captorDao.findAll();
@@ -63,13 +66,14 @@ public class CaptorDaoImplTest {
     }
 
     @Test
-    public void findBySiteId(){
+    public void findBySiteId() {
         List<Captor> captors = captorDao.findBySiteId("site1");
         Assertions.assertThat(captors)
                 .hasSize(2)
                 .extracting("site");
 
     }
+
     @Test
     public void create() {
         Assertions.assertThat(captorDao.findAll()).hasSize(2);
@@ -84,6 +88,7 @@ public class CaptorDaoImplTest {
                 .extracting(Captor::getName)
                 .contains("Eolienne", "Laminoire à chaud", "New captor");
     }
+
     @Test
     public void update() {
         Optional<Captor> captor = captorDao.findById("c1");
@@ -91,7 +96,7 @@ public class CaptorDaoImplTest {
                 .get()
                 .extracting("name")
                 .containsExactly("Eolienne");
-        captor.ifPresent(c ->{
+        captor.ifPresent(c -> {
             c.setName("Captor updated");
             captorDao.save(c);
         });
@@ -101,6 +106,7 @@ public class CaptorDaoImplTest {
                 .extracting("name")
                 .containsExactly("Captor updated");
     }
+
     @Test
     public void deleteById() {
         Site site = new Site("name");
@@ -111,6 +117,7 @@ public class CaptorDaoImplTest {
         captorDao.delete(newCaptor);
         Assertions.assertThat(captorDao.findById(newCaptor.getId())).isEmpty();
     }
+
     @Test
     public void deleteByIdShouldThrowExceptionWhenIdIsUsedAsForeignKey() {
         Captor captor = captorDao.getOne("c1");
@@ -122,6 +129,7 @@ public class CaptorDaoImplTest {
                 .isExactlyInstanceOf(PersistenceException.class)
                 .hasCauseExactlyInstanceOf(ConstraintViolationException.class);
     }
+
     @Test
     public void findByExample() {
         ExampleMatcher matcher = ExampleMatcher.matching()
@@ -157,6 +165,43 @@ public class CaptorDaoImplTest {
 // à 0 je dois avoir une exception
         Assertions.assertThatThrownBy(() -> captorDao.save(captor))
                 .isExactlyInstanceOf(ObjectOptimisticLockingFailureException.class);
+    }
+
+    @Test
+    public void createShouldThrowExceptionWhenNameIsNull() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    Site site = new Site("Bigcorp Lyon");
+                    site.setId("site1");
+                    captorDao.save(new RealCaptor(null, site));
+                    entityManager.flush();
+                })
+                .isExactlyInstanceOf(javax.validation.ConstraintViolationException.class)
+                .hasMessageContaining("ne peut pas être nul");
+    }
+
+    @Test
+    public void createShouldThrowExceptionWhenNameSizeIsInvalid() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    Site site = new Site("Bigcorp Lyon");
+                    site.setId("site1");
+                    captorDao.save(new RealCaptor("ee", site));
+                    entityManager.flush();
+                })
+                .isExactlyInstanceOf(javax.validation.ConstraintViolationException.class)
+                .hasMessageContaining("la taille doit être comprise entre 3 et 100");
+    }
+
+    @Test
+    public void createSimulatedCaptorShouldThrowExceptionWhenMinMaxAreInvalid() {
+        Assertions
+                .assertThatThrownBy(() -> {
+                    captorDao.save(new SimulatedCaptor("Mon site", site, 10, 5));
+                    entityManager.flush();
+                })
+                .isExactlyInstanceOf(javax.validation.ConstraintViolationException.class)
+                .hasMessageContaining("minPowerInWatt should be less than maxPowerInWatt");
     }
 }
 

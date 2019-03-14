@@ -1,6 +1,9 @@
 package com.training.bigcorp.bigcorp.model;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -17,12 +20,14 @@ public class Site {
     /**
      * Site name
      */
-    @Column(nullable = false)
+    @NotNull
+    @Size(min = 3, max = 100)
     private String name;
 
     /**
      * Site captors
      */
+    @Valid
     @OneToMany(mappedBy = "site")
     private Set<Captor> captors;
 
