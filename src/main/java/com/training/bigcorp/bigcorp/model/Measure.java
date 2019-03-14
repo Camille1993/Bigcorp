@@ -26,6 +26,9 @@ public class Measure {
     @ManyToOne(optional = false)
     private Captor captor;
 
+    @Version
+    private int version;
+
     @Deprecated
     public Measure() {
         // Use for serializer or deserializer
@@ -39,7 +42,6 @@ public class Measure {
     public Long getId() {
         return Id;
     }
-
     public void setId(Long id) {
         Id = id;
     }
@@ -47,7 +49,6 @@ public class Measure {
     public Instant getInstant() {
         return instant;
     }
-
     public void setInstant(Instant instant) {
         this.instant = instant;
     }
@@ -55,7 +56,6 @@ public class Measure {
     public Integer getValueInWatt() {
         return valueInWatt;
     }
-
     public void setValueInWatt(Integer valueInWatt) {
         this.valueInWatt = valueInWatt;
     }
@@ -63,13 +63,16 @@ public class Measure {
     public Captor getCaptor() {
         return captor;
     }
-
     public void setCaptor(Captor captor) {
         this.captor = captor;
     }
 
-
-
+    public int getVersion() {
+        return version;
+    }
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     @Override
     public boolean equals(Object o) {

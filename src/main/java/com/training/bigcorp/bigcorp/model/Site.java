@@ -26,6 +26,9 @@ public class Site {
     @OneToMany(mappedBy = "site")
     private Set<Captor> captors;
 
+    @Version
+    private int version;
+
     @Deprecated
     public Site() {
         // Use for serializer or deserializer
@@ -44,7 +47,6 @@ public class Site {
     public String getId() {
         return id;
     }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -52,7 +54,6 @@ public class Site {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -60,9 +61,15 @@ public class Site {
     public Set<Captor> getCaptors() {
         return captors;
     }
-
     public void setCaptors(Set<Captor> captors) {
         this.captors = captors;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     @Override
