@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -24,18 +25,17 @@ public class MeasureDaoImplTest {
 
     @Test
     public void findById() {
-        Measure measure = measureDao.findById(-1L);
-        Assertions.assertThat(measure.getId()).isEqualTo(-1L);
-        Assertions.assertThat(measure.getInstant()).isEqualTo(Instant.parse("2018-08-09T11:00:00.000Z"));
-        Assertions.assertThat(measure.getValueInWatt()).isEqualTo(1_000_000);
-        Assertions.assertThat(measure.getCaptor().getName()).isEqualTo("Eolienne");
-        Assertions.assertThat(measure.getCaptor().getSite().getName()).isEqualTo("Bigcorp Lyon");
-    }
+        Optional<Measure> measure = measureDao.findById(-1L);
+        Assertions.assertThat(measure)
+                .get()
+                .extracting("id", "instant", "valueInWatt")
+                .containsExactly(-1L, Instant.parse("2018-08-09T11:00:00.000Z"), 1_000_000);
+        }
 
     @Test
     public void findByIdShouldReturnNullWhenIdUnknown() {
-        Measure measure = measureDao.findById(-1000L);
-        Assertions.assertThat(measure).isNull();
+        Optional<Measure> measure = measureDao.findById(-1000L);
+        Assertions.assertThat(measure).isEmpty();
     }
 
     @Test
@@ -49,26 +49,34 @@ public class MeasureDaoImplTest {
         Captor captor = new Captor("Eolienne", new Site("site"));
         captor.setId("c1");
         Assertions.assertThat(measureDao.findAll()).hasSize(10);
-        measureDao.persist(new Measure(Instant.now(), 2_333_666, captor));
+        measureDao.save(new Measure(Instant.now(), 2_333_666, captor));
         Assertions.assertThat(measureDao.findAll()).hasSize(11);
     }
 
     @Test
     public void update() {
-        Measure measure = measureDao.findById(-1L);
-        Assertions.assertThat(measure.getValueInWatt()).isEqualTo(1_000_000);
+        Optional<Measure> measure = measureDao.findById(-1L);
+        Assertions.assertThat(measure)
+                .get()
+                .extracting("valueInWatt")
+                .containsExactly(1_000_000);
 
-        measure.setValueInWatt(2_333_666);
-        measureDao.persist(measure);
+        measure.ifPresent(m->{
+            m.setValueInWatt(2_333_666);
+            measureDao.save(m);
+        });
 
         measure = measureDao.findById(-1L);
-        Assertions.assertThat(measure.getValueInWatt()).isEqualTo(2_333_666);
+        Assertions.assertThat(measure)
+                .get()
+                .extracting("valueInWatt")
+                .containsExactly(2_333_666);
     }
 
     @Test
     public void deletebyId() {
         Assertions.assertThat(measureDao.findAll()).hasSize(10);
-        measureDao.delete(measureDao.findById(-1L));
+        measureDao.delete(measureDao.getOne(-1L));
         Assertions.assertThat(measureDao.findAll()).hasSize(9);
     }
 

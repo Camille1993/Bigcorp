@@ -58,6 +58,12 @@ public class Captor {
         this.site = site;
         this.name = name;
     }
+    public Captor(String name, Site site, PowerSource powerSource, Integer defaultPowerInWatt){
+        this.site = site;
+        this.name = name;
+        this.defaultPowerInWatt =defaultPowerInWatt;
+        this.powerSource = powerSource;
+    }
 
     public String getId() {
         return id;
