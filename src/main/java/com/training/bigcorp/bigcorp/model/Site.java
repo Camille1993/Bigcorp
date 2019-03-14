@@ -39,6 +39,8 @@ public class Site {
         this.name = name;
     }
 
+
+    //getters and setters
     public String getId() {
         return id;
     }

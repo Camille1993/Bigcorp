@@ -1,9 +1,7 @@
 package com.training.bigcorp.bigcorp.service;
 
 import com.training.bigcorp.bigcorp.config.Monitored;
-import com.training.bigcorp.bigcorp.model.Captor;
-import com.training.bigcorp.bigcorp.model.PowerSource;
-import com.training.bigcorp.bigcorp.model.Site;
+import com.training.bigcorp.bigcorp.model.*;
 import com.training.bigcorp.bigcorp.repository.CaptorDao;
 import com.training.bigcorp.bigcorp.service.measure.MeasureService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +52,9 @@ public class CaptorServiceImpl implements CaptorService {
             }
 
             Set<Captor> captors = new HashSet<>();
-            captors.add(new Captor("Capteur A", PowerSource.FIXED));
-            captors.add(new Captor("Capteur A", PowerSource.REAL));
-            captors.add(new Captor("Capteur A", PowerSource.SIMULATED));
+            captors.add(new FixedCaptor("Capteur A", new Site("site"), 1_000_000));
+            captors.add(new RealCaptor("Capteur A", new Site("site")));
+            captors.add(new SimulatedCaptor("Capteur A", new Site("site"), 500_000, 10_000_000));
             return captors;
         }
 

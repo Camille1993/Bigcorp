@@ -6,7 +6,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-public class Captor {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class Captor {
     /**
      * Captor id
      */
@@ -18,17 +19,6 @@ public class Captor {
      */
     @Column(nullable = false)
     private String name;
-
-    /**
-     * Captor powerSource
-     */
-
-
-    @Enumerated(EnumType.STRING)
-    private PowerSource powerSource;
-
-    @Column
-    private Integer defaultPowerInWatt;
 
     @ManyToOne
     private Site site;
@@ -43,27 +33,12 @@ public class Captor {
      *
      * @param name
      */
-    public Captor(String name, PowerSource powerSource, Site site) {
-        this.site = site;
-        this.name = name;
-        this.powerSource = powerSource;
-    }
-
-    public Captor(String name, PowerSource powerSource) {
-        this.powerSource = powerSource;
-        this.name = name;
-    }
-
     public Captor(String name, Site site) {
         this.site = site;
         this.name = name;
+
     }
-    public Captor(String name, Site site, PowerSource powerSource, Integer defaultPowerInWatt){
-        this.site = site;
-        this.name = name;
-        this.defaultPowerInWatt =defaultPowerInWatt;
-        this.powerSource = powerSource;
-    }
+
 
     public String getId() {
         return id;
@@ -81,32 +56,13 @@ public class Captor {
         this.name = name;
     }
 
-    public PowerSource getPowerSource() {
-        return powerSource;
-    }
 
-    public void setPowerSource() {
-        this.powerSource = powerSource;
-    }
-    public void setPowerSource(PowerSource powerSource) {
-        this.powerSource = powerSource;
-    }
     public Site getSite() {
         return site;
     }
     public void setSite(Site site) {
         this.site = site;
     }
-
-
-    public Integer getDefaultPowerInWatt() {
-        return defaultPowerInWatt;
-    }
-
-    public void setDefaultPowerInWatt(Integer defaultPowerInWatt) {
-        this.defaultPowerInWatt = defaultPowerInWatt;
-    }
-
 
 
     @Override

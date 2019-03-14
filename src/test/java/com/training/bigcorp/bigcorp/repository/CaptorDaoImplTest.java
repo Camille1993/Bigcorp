@@ -1,8 +1,6 @@
 package com.training.bigcorp.bigcorp.repository;
 
-import com.training.bigcorp.bigcorp.model.Captor;
-import com.training.bigcorp.bigcorp.model.PowerSource;
-import com.training.bigcorp.bigcorp.model.Site;
+import com.training.bigcorp.bigcorp.model.*;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
 import org.hibernate.exception.ConstraintViolationException;
@@ -74,8 +72,9 @@ public class CaptorDaoImplTest {
     @Test
     public void create() {
         Assertions.assertThat(captorDao.findAll()).hasSize(2);
-        Captor captor = new Captor("New captor", site);
-        captor.setPowerSource(PowerSource.SIMULATED);
+        Site site = new Site("name");
+        site.setId("site1");
+        Captor captor = new FixedCaptor("New captor", site, 1_000_000);
 
         captorDao.save(captor);
 
@@ -103,11 +102,13 @@ public class CaptorDaoImplTest {
     }
     @Test
     public void deleteById() {
-        Captor newcaptor = new Captor("New captor", site);
-        captorDao.save(newcaptor);
-        Assertions.assertThat(captorDao.findById(newcaptor.getId())).isNotEmpty();
-        captorDao.delete(newcaptor);
-        Assertions.assertThat(captorDao.findById(newcaptor.getId())).isEmpty();
+        Site site = new Site("name");
+        site.setId("site1");
+        Captor newCaptor = new FixedCaptor("New captor", site, 1_000_000);
+        captorDao.save(newCaptor);
+        Assertions.assertThat(captorDao.findById(newCaptor.getId())).isNotEmpty();
+        captorDao.delete(newCaptor);
+        Assertions.assertThat(captorDao.findById(newCaptor.getId())).isEmpty();
     }
     @Test
     public void deleteByIdShouldThrowExceptionWhenIdIsUsedAsForeignKey() {
@@ -126,9 +127,9 @@ public class CaptorDaoImplTest {
                 .withMatcher("name", match -> match.ignoreCase().contains())
                 .withIgnorePaths("id")
                 .withIgnoreNullValues();
-        Site site = new Site();
+        Site site = new Site("Bigcorp Lyon");
         site.setId("site1");
-        Captor captor = new Captor("lienn", site);
+        Captor captor = new FixedCaptor("lienn", site, 1_000_000);
 
         List<Captor> captors = captorDao.findAll(Example.of(captor, matcher));
         Assertions.assertThat(captors)

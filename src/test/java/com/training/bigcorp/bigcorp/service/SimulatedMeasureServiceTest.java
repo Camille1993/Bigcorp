@@ -24,7 +24,7 @@ public class SimulatedMeasureServiceTest {
     /**
      * Captor used in tests
      */
-    private Captor captor = new Captor("test", PowerSource.SIMULATED,new Site("Florange"));
+    private Captor captor = new FixedCaptor("test",new Site("Florange"), 12_000_000);
     /**
      * Start instant used in tests
      */

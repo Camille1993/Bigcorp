@@ -1,8 +1,8 @@
 package com.training.bigcorp.bigcorp.service;
 
+import com.training.bigcorp.bigcorp.model.RealCaptor;
 import com.training.bigcorp.bigcorp.model.Site;
 import com.training.bigcorp.bigcorp.model.Captor;
-import com.training.bigcorp.bigcorp.model.PowerSource;
 
 import com.training.bigcorp.bigcorp.repository.CaptorDao;
 import org.assertj.core.api.Assertions;
@@ -40,7 +40,7 @@ public class CaptorServiceTest {
     public void findBySite() {
     // Initialisation
         String siteId = "siteId";
-        Captor expectedCaptor = new Captor("Capteur A",PowerSource.SIMULATED, new Site("Florange"));
+        Captor expectedCaptor = new RealCaptor("Capteur A", new Site("Florange"));
 
         Mockito.when(captorDao.findBySiteId(siteId)).thenReturn(Arrays.asList(expectedCaptor))
         ;

@@ -2,6 +2,7 @@ package com.training.bigcorp.bigcorp.repository;
 
 import com.training.bigcorp.bigcorp.model.Captor;
 import com.training.bigcorp.bigcorp.model.Measure;
+import com.training.bigcorp.bigcorp.model.RealCaptor;
 import com.training.bigcorp.bigcorp.model.Site;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class MeasureDaoImplTest {
 
     @Test
     public void create() {
-        Captor captor = new Captor("Eolienne", new Site("site"));
+        Captor captor = new RealCaptor("Eolienne", new Site("site"));
         captor.setId("c1");
         Assertions.assertThat(measureDao.findAll()).hasSize(10);
         measureDao.save(new Measure(Instant.now(), 2_333_666, captor));
