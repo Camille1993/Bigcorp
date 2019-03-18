@@ -2,33 +2,46 @@ package com.training.bigcorp.bigcorp.service.measure;
 
 import com.training.bigcorp.bigcorp.config.properties.BigCorpApplicationMeasureProperties;
 import com.training.bigcorp.bigcorp.config.properties.BigCorpApplicationProperties;
+import com.training.bigcorp.bigcorp.controller.dto.MeasureDto;
 import com.training.bigcorp.bigcorp.model.Captor;
 import com.training.bigcorp.bigcorp.model.Measure;
 import com.training.bigcorp.bigcorp.model.MeasureStep;
+import com.training.bigcorp.bigcorp.model.SimulatedCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 @Transactional
-public class SimulatedMeasureService implements MeasureService{
-    @Autowired
-    private BigCorpApplicationProperties measure;
+public class SimulatedMeasureService implements MeasureService<SimulatedCaptor> {
+    private RestTemplate restTemplate;
+
+    public SimulatedMeasureService(RestTemplateBuilder builder){
+        this.restTemplate = builder.setConnectTimeout(1000).build();
+    }
 
         @Override
-    public List<Measure> readMeasures(Captor captor, Instant start, Instant end,
+    public List<Measure> readMeasures(SimulatedCaptor captor, Instant start, Instant end,
                                       MeasureStep step) {
         checkReadMeasuresAgrs(captor, start, end, step);
-        List<Measure> measures = new ArrayList<>();
-        Instant current = start;
-        while(current.isBefore(end)){
-            measures.add(new Measure(current, measure.getMeasure().getDefaultSimulated(), captor));
-            current = current.plusSeconds(step.getDurationInSeconds());
-        }
-        return measures;
+            UriComponentsBuilder builder = UriComponentsBuilder
+                    .fromUriString("http://localhost:8090/measures")
+                    .path("")
+                    .queryParam("start", start)
+                    .queryParam("end", end)
+                    .queryParam("min", captor.getMinPowerInWatt())
+                    .queryParam("max", captor.getMaxPowerInWatt())
+                    .queryParam("step", step.getDurationInSeconds());
+
+            Measure[] measures = this.restTemplate.getForObject(builder.toUriString(), Measure[].class);
+        return Arrays.asList(measures);
     }
 }

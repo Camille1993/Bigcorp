@@ -17,8 +17,7 @@ public class SimulatedCaptor extends Captor {
     public boolean isValid(){
         return this.minPowerInWatt<= this.maxPowerInWatt;
     }
-    @Deprecated
-    public SimulatedCaptor() {
+       public SimulatedCaptor() {
         super();
     }
 
@@ -26,5 +25,19 @@ public class SimulatedCaptor extends Captor {
         super(name, site, PowerSource.SIMULATED);
         this.maxPowerInWatt = maxPowerInWatt;
         this.minPowerInWatt = minPowerInWatt;
+    }
+
+    public Integer getMinPowerInWatt() {
+        return minPowerInWatt;
+    }
+    public void setMinPowerInWatt(Integer minPowerInWatt) {
+        this.minPowerInWatt = minPowerInWatt;
+    }
+
+    public Integer getMaxPowerInWatt() {
+        return maxPowerInWatt;
+    }
+    public void setMaxPowerInWatt(Integer maxPowerInWatt) {
+        this.maxPowerInWatt = maxPowerInWatt;
     }
 }

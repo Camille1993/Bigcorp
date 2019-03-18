@@ -1,5 +1,6 @@
 package com.training.bigcorp.bigcorp.controller;
 
+import com.training.bigcorp.bigcorp.exception.NotFoundException;
 import com.training.bigcorp.bigcorp.model.Site;
 import com.training.bigcorp.bigcorp.repository.CaptorDao;
 import com.training.bigcorp.bigcorp.repository.MeasureDao;
@@ -32,7 +33,7 @@ public class SiteController {
     public ModelAndView findById(@PathVariable String id) {
         return new ModelAndView("site")
                 .addObject("site",
-                        siteDao.findById(id).orElseThrow(IllegalArgumentException::new));
+                        siteDao.findById(id).orElseThrow(NotFoundException::new));
     }
 
     @GetMapping("/create")
@@ -46,7 +47,7 @@ public class SiteController {
                 return new ModelAndView("site").addObject("site", siteDao.save(site));
             } else {
                 Site siteToPersist =
-                        siteDao.findById(site.getId()).orElseThrow(IllegalArgumentException::new);
+                        siteDao.findById(site.getId()).orElseThrow(NotFoundException::new);
 // L'utilisateur ne peut changer que le nom du site sur l'écran
                 siteToPersist.setName(site.getName());
                 return new ModelAndView("sites").addObject("sites", siteDao.findAll());
