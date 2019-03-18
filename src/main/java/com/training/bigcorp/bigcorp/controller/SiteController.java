@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.stream.Collectors;
+
 @Controller
 @Transactional
 @RequestMapping("/sites")
@@ -67,6 +69,21 @@ public class SiteController {
         captorDao.deleteBySiteId(id);
         siteDao.deleteById(id);
         return new ModelAndView("sites").addObject("sites", siteDao.findAll());
+    }
+
+    @GetMapping("/{id}/measures")
+    public ModelAndView findMeasuresById(@PathVariable String id) {
+        Site site = siteDao.findById(id).orElseThrow(IllegalArgumentException::new);
+// Comme les templates ont une intelligence limitée on concatène ici les id de captor dans une chaine
+// de caractères qui pourra être exeploitée tel quelle
+        String captors = site.getCaptors()
+                .stream()
+                .map(c -> "{ id: '" + c.getId() + "', name: '" + c.getName()
+                        + "'}")
+                .collect(Collectors.joining(","));
+        return new ModelAndView("site-measures")
+                .addObject("site", site)
+                .addObject("captors", captors);
     }
 
 
