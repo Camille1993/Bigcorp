@@ -36,13 +36,14 @@ public class SecurityConfig {
     @Bean
     public WebMvcConfigurer webMvcConfigurer() {
         return new WebMvcConfigurer() {
-            public void addInterceptors(InterceptorRegistry registry) {
-                registry.addInterceptor(securityInfoInterceptor());
-            }
             public void addViewControllers(ViewControllerRegistry registry) {
                 registry.addViewController("/").setViewName("index");
                 registry.addViewController("/formLogin").setViewName("login");
             }
+            public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(securityInfoInterceptor());
+            }
+
 
         };
     }
@@ -56,6 +57,11 @@ public class SecurityConfig {
                 if(modelAndView!=null){
                     modelAndView.addObject("logged", request.getUserPrincipal() != null);
                     modelAndView.addObject("_csrf", request.getAttribute("_csrf"));
+                    if(request.getRequestURI() != null && request.getQueryString() !=null){
+                        modelAndView.addObject("error",
+                                request.getRequestURI().equals("/formLogin") &&
+                                        request.getQueryString().contains("error"));
+                    }
                 }
             }
         };
