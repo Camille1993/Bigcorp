@@ -1,8 +1,7 @@
 package com.training.bigcorp.bigcorp.service.measure;
 
-import com.training.bigcorp.bigcorp.config.properties.BigCorpApplicationMeasureProperties;
+
 import com.training.bigcorp.bigcorp.config.properties.BigCorpApplicationProperties;
-import com.training.bigcorp.bigcorp.model.Captor;
 import com.training.bigcorp.bigcorp.model.Measure;
 import com.training.bigcorp.bigcorp.model.MeasureStep;
 import com.training.bigcorp.bigcorp.model.RealCaptor;

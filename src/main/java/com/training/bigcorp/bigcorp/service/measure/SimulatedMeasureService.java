@@ -1,13 +1,8 @@
 package com.training.bigcorp.bigcorp.service.measure;
 
-import com.training.bigcorp.bigcorp.config.properties.BigCorpApplicationMeasureProperties;
-import com.training.bigcorp.bigcorp.config.properties.BigCorpApplicationProperties;
-import com.training.bigcorp.bigcorp.controller.dto.MeasureDto;
-import com.training.bigcorp.bigcorp.model.Captor;
 import com.training.bigcorp.bigcorp.model.Measure;
 import com.training.bigcorp.bigcorp.model.MeasureStep;
 import com.training.bigcorp.bigcorp.model.SimulatedCaptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
