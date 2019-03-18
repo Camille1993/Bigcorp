@@ -101,6 +101,7 @@ public class Measure {
                 "instant=" + instant +
                 ", valueInWatt=" + valueInWatt +
                 ", captor=" + captor +
-                '}';
+                ", version=" + version +
+                "}";
     }
 }

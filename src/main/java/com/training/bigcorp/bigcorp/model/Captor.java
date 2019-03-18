@@ -14,9 +14,13 @@ public abstract class Captor {
     /**
      * Captor id
      */
+    @NotNull
     @Id
-    private String id = UUID.randomUUID().toString();
-
+    private String id;
+    @PrePersist
+    public void  generateId(){
+        this.id =UUID.randomUUID().toString();
+    }
     /**
      * Captor name
      */
@@ -28,10 +32,14 @@ public abstract class Captor {
     @ManyToOne
     private Site site;
 
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private PowerSource powerSource;
+
     @Version
     private int version;
 
-    @Deprecated
+
     public Captor() {
         // Use for serializer or deserializer
     }
@@ -41,9 +49,10 @@ public abstract class Captor {
      *
      * @param name
      */
-    public Captor(String name, Site site) {
+    public Captor(String name, Site site, PowerSource powerSource) {
         this.site = site;
         this.name = name;
+        this.powerSource = powerSource;
 
     }
 
@@ -76,6 +85,13 @@ public abstract class Captor {
         this.version = version;
     }
 
+    public PowerSource getPowerSource() {
+        return powerSource;
+    }
+    public void setPowerSource(PowerSource powerSource) {
+        this.powerSource = powerSource;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,7 +111,9 @@ public abstract class Captor {
         return "Captor{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", site='" + site + '\'' +
-                '}';
+                ", site='" + site.getName() + '\'' +
+                ", powerSource =" + powerSource +
+                ", version =" + version +
+                "}";
     }
 }

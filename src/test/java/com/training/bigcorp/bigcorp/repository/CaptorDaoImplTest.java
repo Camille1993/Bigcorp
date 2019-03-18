@@ -29,6 +29,10 @@ public class CaptorDaoImplTest {
 
     @Autowired
     private CaptorDao captorDao;
+    @Autowired
+    private SiteDao siteDao;
+    @Autowired
+    private MeasureDao measureDao;
 
     private Site site;
     @Autowired
@@ -117,6 +121,16 @@ public class CaptorDaoImplTest {
         captorDao.delete(newCaptor);
         Assertions.assertThat(captorDao.findById(newCaptor.getId())).isEmpty();
     }
+
+    @Test
+    public void deleteBySiteId() {
+        Assertions.assertThat(captorDao.findBySiteId("site1")).hasSize(2);
+        measureDao.deleteAll();
+        captorDao.deleteBySiteId("site1");
+        siteDao.delete(site);
+        Assertions.assertThat(captorDao.findBySiteId("site1")).isEmpty();
+    }
+
 
     @Test
     public void deleteByIdShouldThrowExceptionWhenIdIsUsedAsForeignKey() {

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface CaptorDao extends JpaRepository<Captor, String>, CaptorCustomDao {
     List<Captor> findBySiteId(String siteId);
+    void deleteBySiteId(String siteId);
 }

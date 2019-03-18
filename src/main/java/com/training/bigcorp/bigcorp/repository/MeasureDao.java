@@ -4,6 +4,7 @@ import com.training.bigcorp.bigcorp.model.Measure;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-interface MeasureDao extends JpaRepository<Measure, Long> {
+public interface MeasureDao extends JpaRepository<Measure, Long> {
+    void deleteByCaptorId(String captorId);
 
 }

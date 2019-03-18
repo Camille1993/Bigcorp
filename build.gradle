@@ -19,5 +19,9 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('com.h2database:h2')
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+	compile ('org.springframework.boot:spring-boot-starter-mustache')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+bootRun{
+	sourceResources sourceSets.main
 }

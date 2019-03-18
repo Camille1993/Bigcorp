@@ -7,15 +7,20 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 public class Site {
-    /**s
+    /**
      * Site id
      */
 
     @Id
-    private String id = UUID.randomUUID().toString();
+    private String id;
+    @PrePersist
+    public void  generateId(){
+        this.id =UUID.randomUUID().toString();
+    }
 
     /**
      * Site name
@@ -34,7 +39,7 @@ public class Site {
     @Version
     private int version;
 
-    @Deprecated
+
     public Site() {
         // Use for serializer or deserializer
     }
@@ -96,7 +101,8 @@ public class Site {
         return "Site{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", captors=" + captors +
-                '}';
+                ", captors=" + captors.stream().map(Captor::getName).collect(Collectors.joining())+
+                ", version=" + version +
+                "}";
     }
 }
